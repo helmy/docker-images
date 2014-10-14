@@ -2,7 +2,7 @@
 set -e
 
 if [ "$1" = 'start-bamboo.sh' ]; then
-    chown -R bamboo /var/atlassian/bamboo/data
+    chown -R bamboo "$BAMBOO_HOME"
     exec gosu bamboo "$@"
 fi
 
