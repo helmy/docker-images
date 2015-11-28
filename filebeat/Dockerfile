@@ -1,13 +1,13 @@
-FROM debian:jessie
+FROM buildpack-deps:jessie-curl
 
-RUN apt-get update && apt-get install -y \
-    curl \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+ENV FILEBEAT_VERSION 1.0.0
+ENV FILEBEAT_SHA1 3af2ea90bc3bc9880181503899f82f6a5e852ca8
 
-RUN curl -L -O https://download.elastic.co/beats/filebeat/filebeat_1.0.0_amd64.deb \
-    && dpkg -i filebeat_1.0.0_amd64.deb \
-    && rm filebeat_1.0.0_amd64.deb
+RUN set -x \
+    && curl  -fSL https://download.elastic.co/beats/filebeat/filebeat_${FILEBEAT_VERSION}_amd64.deb -o filebeat.deb\
+    && echo "${FILEBEAT_SHA1}  filebeat.deb" | sha1sum -c - \
+    && dpkg -i filebeat.deb \
+    && rm filebeat.deb
 
 VOLUME ["/etc/filebeat"]
 
